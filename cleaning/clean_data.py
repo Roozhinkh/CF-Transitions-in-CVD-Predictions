@@ -1,8 +1,13 @@
+from pathlib import Path
+
 import pandas as pd
 import numpy as np
 
 def main():
-    input_path = "ess.csv"
+    project_root = Path(__file__).resolve().parent.parent
+    print(project_root)
+    data_path = project_root / "data" 
+    input_path = data_path / "ess.csv"
     df = pd.read_csv(input_path)
 
     print("Read file:", input_path)
@@ -109,11 +114,11 @@ def main():
     print(df_model["cvd_any"].value_counts(normalize=True))
     print()
 
-    full_clean_path = "ess_clean_full.csv"
+    full_clean_path = data_path / "ess_clean_full.csv"
     df.to_csv(full_clean_path, index=False)
     print(f"Saved fully cleaned dataset to: {full_clean_path}")
 
-    model_ready_path = "ess_model_ready.csv"
+    model_ready_path = data_path / "ess_model_ready.csv"
     df_model.to_csv(model_ready_path, index=False)
     print(f"Saved model-ready dataset to: {model_ready_path}")
 

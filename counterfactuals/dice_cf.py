@@ -1,11 +1,19 @@
 from pathlib import Path
+import sys
 import numpy as np 
 import pandas as pd 
 import joblib
 import dice_ml
 
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
+
+from explain.alibi_anch import explain_with_alibi_anchors
+from explain.shap import explain_with_shap
+from explain.alibi_shap import explain_with_alibi_shap
+
+
 def main():
-    project_root = Path(__file__).resolve().parent.parent
     data_path = project_root / "data" / "ess_model_ready.csv"
     model_path = project_root / "models" / "rf_cvd.pkl"
     out_dir = project_root / "outputs" / "counterfactuals"
@@ -39,6 +47,14 @@ def main():
     print(f"Current predicted risk (P(cvd_any=1)): {current_prob:.3f}")
     print(f"Target (halve risk): <= {target_prob:.3f}")
     print()
+
+    explain_with_alibi_anchors(model, X, query_instance, feature_cols)
+
+    # These SHAP explanations are both very similar, but they do 
+    # not get the exact same values.
+    explain_with_shap(model, X, query_instance, feature_cols, output_path=out_dir)
+
+    explain_with_alibi_shap(model, X, query_instance, feature_cols, output_path=out_dir)
 
     dice_data = dice_ml.Data(
         dataframe=df,
