@@ -1,8 +1,13 @@
 import shap
 import pandas as pd
 
+# This was a simple SHAP explanation function using the shap library directly.
+# It calculates SHAP values for a given query instance and outputs feature importance.
+# It was recommended to me by Claude and i decided to keep it for comparison with Alibi's SHAP explainer.
+# Documentation: https://shap.readthedocs.io/en/latest/index.html, https://deepwiki.com/shap/shap/3.1-treeexplainer
+
 def explain_with_shap(model, X, query_instance, feature_cols, output_path="", filename="shap_feature_importance.csv"):
-    """Generate SHAP explanations for feature importance."""
+    # Generate SHAP explanations for feature importance.
     print("\n=== SHAP Feature Importance ===")
     
     # Create SHAP explainer (TreeExplainer for Random Forest)
@@ -28,6 +33,6 @@ def explain_with_shap(model, X, query_instance, feature_cols, output_path="", fi
         output_path.mkdir(parents=True, exist_ok=True)
         feature_importance.to_csv(output_path / filename, index=False)
     
-    print(feature_importance.head(10))
+    print(feature_importance.head(len(feature_cols)))
     
     return shap_values

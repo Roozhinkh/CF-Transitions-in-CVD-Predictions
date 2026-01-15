@@ -51,10 +51,11 @@ def main():
     explain_with_alibi_anchors(model, X, query_instance, feature_cols)
 
     # These SHAP explanations are both very similar, but they do 
-    # not get the exact same values.
+    # not get the exact same values. I have kept both for comparison.
     explain_with_shap(model, X, query_instance, feature_cols, output_path=out_dir)
 
     explain_with_alibi_shap(model, X, query_instance, feature_cols, output_path=out_dir)
+
 
     dice_data = dice_ml.Data(
         dataframe=df,

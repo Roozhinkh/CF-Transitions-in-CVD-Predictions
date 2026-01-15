@@ -1,27 +1,27 @@
 from alibi.explainers import AnchorTabular
 import pandas as pd
 
-ESS_TABLE = """
-Core variables according to ESS documentation:
- - etfruit  : frequency of fruit consumption
- - eatveg   : frequency of vegetable consumption
- - cgtsmok  : smoking behavior
- - alcfreq  : alcohol consumption frequency
- - slprl    : sleep problems
- - paccnois : exposure to noise
- - bmi      : body mass index (newly created)
- - gndr     : gender
-Additionally included:
- - health   : self-rated health
- - dosprt   : sport/physical activity
- - sclmeet  : frequency of social meetings
- - inprdsc  : perceived discrimination
- - ctrlife  : perceived control over life
-"""
 
+# Generate Anchor explanations for the model's prediction.
+# Anchor explanations provide interpretable rules that explain the model's decision
+# for a specific instance. As long as the anchor conditions are met, the model's prediction
+# is expected to remain the same with high precision.
+# Detailed documentation: https://github.com/ramonpzg/alibi/blob/rp-alibi-newdocs-dec23/doc/source/methods/Anchors.ipynb
 
 def explain_with_alibi_anchors(model, X, query_instance, feature_cols):
-    #Generate Anchor explanations for the model's prediction.
+    """
+    Generate Anchor explanations for the model's prediction.
+    
+    Args:
+        model: Trained sklearn classifier model that implements predict() and predict_proba() methods.
+        X (pd.DataFrame): Training data features used to fit the anchor explainer.
+        query_instance (pd.DataFrame): Single row DataFrame containing the instance to explain.
+        feature_cols (list): List of feature column names in the dataset.
+    
+    Returns:
+        explanation: Anchor explanation object containing the anchor rules, precision, and coverage.
+    """
+
     print("\nAlibi Anchor Explanations")
 
     def predictor_wrapper(X_array):
@@ -44,9 +44,7 @@ def explain_with_alibi_anchors(model, X, query_instance, feature_cols):
     # Explain the query instance
     explanation = explainer.explain(query_instance.values[0], threshold=0.95)
 
-    print(ESS_TABLE)
-
-    print(f"Anchor rules: \n{'\n'.join(explanation.anchor)} \n")
+    print(f"Anchor rules: {' AND '.join(explanation.anchor)}")
     print(f"Precision: {explanation.precision:.3f}")
     print(f"Coverage: {explanation.coverage:.3f}")
     print("==================================\n")
